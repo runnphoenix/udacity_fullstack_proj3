@@ -4,6 +4,7 @@
 
 	<h3>{{blog.title}}</h3>
 	<div>{{blog.created.strftime("%b %d, %Y")}}</div>
+	<div>{{blog.author}}</div>
 	<hr>
 	<br>
 	</textarea style="width:300px; height:500px;">{{blog.content | safe}}</textarea>

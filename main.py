@@ -225,7 +225,7 @@ class NewPost(Handler):
             self.render("newpost.html", errorMessage = errorMessage, blogTitle = blogTitle, blogContent = blogContent)
         else:
             # write db
-            blog = Blog(parent = blogs_key(), title = blogTitle, content = blogContent)
+            blog = Blog(parent = blogs_key(), title = blogTitle, content = blogContent, author = str(self.user.key().id())) #TODO: author may not exist
             blog.put()
             # goto blog page
             self.redirect("/blog/%s" % str(blog.key().id()))
@@ -255,6 +255,8 @@ class BlogPage(Handler):
 class Blog(db.Model):
     title = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
+    author = db.StringProperty(required = True)
+    author_id
     created = db.DateTimeProperty(auto_now_add = True)
     modified = db.DateTimeProperty(auto_now = True)
     
