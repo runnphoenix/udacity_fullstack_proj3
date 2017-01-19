@@ -9,4 +9,9 @@
 	<br>
 	</textarea style="width:300px; height:500px;">{{blog.content | safe}}</textarea>
 	
+	<br><br>
+	{% if author %}
+		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
+	{% endif %}
+	
 {% endblock%}
