@@ -253,7 +253,11 @@ class BlogPage(Handler):
             return
         
         blog.prepare_render()
-        is_author = (self.user.name == blog.author)
+        
+        is_author = False
+        if self.user:
+            is_author = (self.user.name == blog.author)
+            
         self.render("blogPost.html", blog = blog, author = is_author)
         
 class EditBlog(Handler):
@@ -279,7 +283,14 @@ class EditBlog(Handler):
         else:
             # write db
             blog = Blog(parent = blogs_key(), title = blogTitle, content = blogContent, author = self.user.name)
+            
+            
+            
+            #TODO: Just Modify
             blog.put()
+            
+            
+            
             # goto blog page
             self.redirect("/blog/%s" % str(blog.key().id()))
     
