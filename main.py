@@ -282,14 +282,12 @@ class EditBlog(Handler):
             self.render("newpost.html", errorMessage = errorMessage, blogTitle = blogTitle, blogContent = blogContent)
         else:
             # write db
-            blog = Blog(parent = blogs_key(), title = blogTitle, content = blogContent, author = self.user.name)
+            key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
+            blog = db.get(key)
+            blog.title = blogTitle
+            blog.content = blogContent
             
-            
-            
-            #TODO: Just Modify
             blog.put()
-            
-            
             
             # goto blog page
             self.redirect("/blog/%s" % str(blog.key().id()))
