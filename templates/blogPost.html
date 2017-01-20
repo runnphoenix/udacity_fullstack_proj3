@@ -12,6 +12,9 @@
 	<br><br>
 	{% if author %}
 		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
+		<form method="post">
+			<button>Delete</button>
+		</form>
 	{% endif %}
 	
 {% endblock%}

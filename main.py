@@ -209,6 +209,8 @@ class Blogs(Handler):
     def get(self):
         # Show blogs
         blogs = db.GqlQuery("select * from Blog order by created desc limit 10")
+        for blog in blogs:
+            print blog.title
         self.render("blogs.html", blogs = blogs)
         
 class NewPost(Handler):
@@ -259,6 +261,14 @@ class BlogPage(Handler):
             is_author = (self.user.name == blog.author)
             
         self.render("blogPost.html", blog = blog, author = is_author)
+        
+    def post(self, blog_id):
+        key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
+        blog = db.get(key)
+        
+        blog.delete()
+        
+        self.redirect("/blog")
         
 class EditBlog(Handler):
     def get(self, blog_id):
