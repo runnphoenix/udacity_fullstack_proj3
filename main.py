@@ -279,7 +279,6 @@ class EditBlog(Handler):
             self.error(404)
             return
         
-        blog.prepare_render()
         self.render("editBlog.html", blog = blog)
       
     def post(self, blog_id):
