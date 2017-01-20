@@ -145,7 +145,7 @@ class Signup(Handler):
     def finish(self):
         user = User.by_name(self.userName)
         if user:
-            errorMessage = "User already esixt."
+            errorMessage = "User already exist."
             self.render("signup.html", error_username = errorMessage)
         else:
             pw_hash = make_pw_hash(self.userName, self.password)
@@ -218,7 +218,7 @@ class NewPost(Handler):
         if self.user:
             self.render("newpost.html")
         else:
-            self.write("Log in first.")
+            self.redirect("/login")
     
     def post(self):
         blogTitle = self.request.get("subject")
@@ -237,11 +237,11 @@ class NewPost(Handler):
     
     def erMessage(self, blogTitle, blogContent):
         if blogTitle and (not blogContent):
-            return "Content is empty"
+            return "Content is empty."
         elif (not blogTitle) and blogContent:
-            return "Title is empty"
+            return "Title is empty."
         elif (not blogTitle) and (not blogContent):
-            return "Both title and content empty"
+            return "Both title and content empty."
         else:
             return None
             
@@ -320,6 +320,11 @@ class Blog(db.Model):
     
     def prepare_render(self):
         self.content = self.content.replace('\n', '<br>')
+        
+class Comment(db.Model):
+    content = db.TextProperty(required = True)
+    author = db.StringProperty(required = True)
+    blog = db.StringProperty(required = True)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
