@@ -209,8 +209,6 @@ class Blogs(Handler):
     def get(self):
         # Show blogs
         blogs = db.GqlQuery("select * from Blog order by created desc limit 10")
-        for blog in blogs:
-            print blog.title
         self.render("blogs.html", blogs = blogs)
         
 class NewPost(Handler):
@@ -260,15 +258,26 @@ class BlogPage(Handler):
         if self.user:
             is_author = (self.user.name == blog.author)
             
-        self.render("blogPost.html", blog = blog, author = is_author)
+        comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
+        self.render("blogPost.html", blog = blog, author = is_author, comments = comments)
         
     def post(self, blog_id):
         key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
         blog = db.get(key)
         
-        blog.delete()
-        
-        self.redirect("/blog")
+        commentContent = self.request.get("commentContent")
+        if commentContent:
+            newcomment = Comment(parent = key, content = commentContent, author = self.user.name, blog_id = key.id())
+            newcomment.put()
+            
+            is_author = False
+            if self.user:
+                is_author = (self.user.name == blog.author)
+            comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
+            self.render("blogPost.html", blog = blog, author = is_author, comments = comments)
+        else:
+            blog.delete()
+            self.redirect("/blog")
         
 class EditBlog(Handler):
     def get(self, blog_id):
@@ -324,7 +333,7 @@ class Blog(db.Model):
 class Comment(db.Model):
     content = db.TextProperty(required = True)
     author = db.StringProperty(required = True)
-    blog = db.StringProperty(required = True)
+    blog_id = db.IntegerProperty(required = True)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),

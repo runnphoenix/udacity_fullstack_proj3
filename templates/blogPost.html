@@ -11,13 +11,30 @@
 	
 	<br><br>
 	{% if author %}
-	
 		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
-		
 		<form method="post">
 			<button>Delete</button>
 		</form>
-		
+	{% endif %}
+	
+	
+	<br><br>
+	<!-- Comments -->
+	<h3>Comments</h3>
+	{% for comment in comments %}
+		<div>{{comment.content}}</div>
+	{% endfor %}
+	
+	
+	{% if author %}
+		<br><br>
+		<!-- New Comment -->
+		<h3>New Comment</h3>
+		<form method="post">
+			<textarea name="commentContent" style="width:200px;height:100px;"></textarea>
+			<br>
+			<input type="submit">
+		</form>
 	{% endif %}
 	
 {% endblock%}
