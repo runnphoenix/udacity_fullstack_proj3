@@ -11,6 +11,16 @@
 			<hr>
 			<pre class="blog-content">{{blog.content}}</pre>
 			<br><br>
+			
+			
+			<br><br>
+			{% if author %}
+				<form name="deleteButton" method="post">
+					<button>Delete</button>
+				</form>
+			{% endif %}
+			
+			
 		</div>
 	{% endfor %}
 {% endblock %}

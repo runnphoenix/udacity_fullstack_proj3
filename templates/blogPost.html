@@ -10,12 +10,15 @@
 	</textarea style="width:300px; height:500px;">{{blog.content | safe}}</textarea>
 	
 	<br><br>
-	{% if author %}
-		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
-		<form method="post">
-			<button>Delete</button>
-		</form>
-	{% endif %}
+	<!-- Likes -->
+	<h3>Likes</h3>
+	{% for like in likes %}
+		<div>{{like.fromed}}</div>
+	{% endfor %}
+	<br>
+	<form method="post">
+		<button name="likeButton">Like</button>
+	</form>
 	
 	
 	<br><br>
@@ -28,6 +31,8 @@
 	
 	{% if author %}
 		<br><br>
+		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
+		<br>
 		<!-- New Comment -->
 		<h3>New Comment</h3>
 		<form method="post">

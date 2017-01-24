@@ -334,6 +334,9 @@ class Comment(db.Model):
     content = db.TextProperty(required = True)
     author = db.StringProperty(required = True)
     blog_id = db.IntegerProperty(required = True)
+    
+class Like(db.Model):
+    fromed = db.StringProperty(required = True)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
