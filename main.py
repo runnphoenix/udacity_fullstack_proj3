@@ -260,7 +260,7 @@ class BlogPage(Handler):
             
         comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
         likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
-        self.render("blogPost.html", blog = blog, author = is_author, comments = comments, likes = likes)
+        self.render("blogPost.html", blog = blog, is_author = is_author, userName = self.user.name, comments = comments, likes = likes)
         
     def post(self, blog_id):
         key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
@@ -284,6 +284,13 @@ class BlogPage(Handler):
         elif "deleteButton" in params:
             blog.delete()
             self.redirect("/blog")
+        # Delete Comment
+        elif "deleteComment" in params:
+            comment_id = self.request.get("deleteComment")
+            comment_key = db.Key.from_path("Comment", int(comment_id))
+            comment = db.get(comment_key)
+            comment.delete()
+            self.get(blog_id)
         # Comment
         elif commentContent:
             print("Comment.")
