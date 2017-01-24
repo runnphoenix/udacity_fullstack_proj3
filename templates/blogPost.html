@@ -22,6 +22,16 @@
 	
 	
 	<br><br>
+	{% if author %}
+		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
+		
+		<form name="deleteButton" method="post">
+			<button>Delete</button>
+		</form>
+	{% endif %}
+	
+	
+	<br><br>
 	<!-- Comments -->
 	<h3>Comments</h3>
 	{% for comment in comments %}
@@ -31,8 +41,6 @@
 	
 	{% if author %}
 		<br><br>
-		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
-		<br>
 		<!-- New Comment -->
 		<h3>New Comment</h3>
 		<form method="post">

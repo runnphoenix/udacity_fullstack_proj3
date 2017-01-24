@@ -265,6 +265,8 @@ class BlogPage(Handler):
         key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
         blog = db.get(key)
         
+        print(self.request)
+        
         commentContent = self.request.get("commentContent")
         if commentContent:
             newcomment = Comment(parent = key, content = commentContent, author = self.user.name, blog_id = key.id())
@@ -276,8 +278,9 @@ class BlogPage(Handler):
             comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
             self.render("blogPost.html", blog = blog, author = is_author, comments = comments)
         else:
-            blog.delete()
-            self.redirect("/blog")
+            pass
+            #blog.delete()
+            #self.redirect("/blog")
         
 class EditBlog(Handler):
     def get(self, blog_id):
