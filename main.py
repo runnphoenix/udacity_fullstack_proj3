@@ -259,28 +259,40 @@ class BlogPage(Handler):
             is_author = (self.user.name == blog.author)
             
         comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
-        self.render("blogPost.html", blog = blog, author = is_author, comments = comments)
+        likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
+        self.render("blogPost.html", blog = blog, author = is_author, comments = comments, likes = likes)
         
     def post(self, blog_id):
         key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
         blog = db.get(key)
         
-        print(self.request)
-        
         commentContent = self.request.get("commentContent")
-        if commentContent:
-            newcomment = Comment(parent = key, content = commentContent, author = self.user.name, blog_id = key.id())
+        params = self.request.params
+        # Like
+        if "likeButton" in params:
+            toAdd = True
+            like = Like(fromed = self.user.name, blog_id = key.id())
+            likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
+            for liked in likes:
+                if liked.fromed == like.fromed:
+                    toAdd = False
+            if toAdd:
+                like.put()
+            #TODO: if OK, change other similar places
+            self.get(blog_id)
+        # Delete
+        elif "deleteButton" in params:
+            blog.delete()
+            self.redirect("/blog")
+        # Comment
+        elif commentContent:
+            print("Comment.")
+            newcomment = Comment(content = commentContent, author = self.user.name, blog_id = key.id())
             newcomment.put()
-            
-            is_author = False
-            if self.user:
-                is_author = (self.user.name == blog.author)
-            comments = db.GqlQuery("select * from Comment where blog_id = :1", key.id())
-            self.render("blogPost.html", blog = blog, author = is_author, comments = comments)
+            self.get(blog_id)
         else:
-            pass
-            #blog.delete()
-            #self.redirect("/blog")
+            print("Others.")
+            self.get(blog_id)
         
 class EditBlog(Handler):
     def get(self, blog_id):
@@ -339,6 +351,7 @@ class Comment(db.Model):
     blog_id = db.IntegerProperty(required = True)
     
 class Like(db.Model):
+    blog_id = db.IntegerProperty(required = True)
     fromed = db.StringProperty(required = True)
 
 app = webapp2.WSGIApplication([
