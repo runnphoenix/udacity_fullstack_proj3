@@ -293,12 +293,10 @@ class BlogPage(Handler):
             self.get(blog_id)
         # Comment
         elif commentContent:
-            print("Comment.")
             newcomment = Comment(content = commentContent, author = self.user.name, blog_id = key.id())
             newcomment.put()
             self.get(blog_id)
         else:
-            print("Others.")
             self.get(blog_id)
         
 class EditBlog(Handler):
@@ -341,7 +339,24 @@ class EditBlog(Handler):
             return "Both title and content empty"
         else:
             return None          
-            
+
+class EditComment(Handler):
+    def get(self, blog_id, comment_id):
+        blog_key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
+        blog = db.get(blog_key)
+        comment_key = db.Key.from_path("Comment", int(comment_id))
+        comment = db.get(comment_key)
+        print(comment.content)
+        self.render("editComment.html", blog = blog, comment = comment)
+        
+    def post(self, blog_id, comment_id):
+        newCommentContent = self.request.get("content")
+        comment_key = db.Key.from_path("Comment", int(comment_id))
+        comment = db.get(comment_key)
+        comment.content = newCommentContent
+        comment.put()
+        self.redirect("/blog/%s" % blog_id)
+                
 class Blog(db.Model):
     title = db.StringProperty(required = True)
     content = db.TextProperty(required = True)
@@ -370,5 +385,6 @@ app = webapp2.WSGIApplication([
     ('/blog/?', Blogs),
     ('/blog/([0-9]+)', BlogPage),
     ('/blog/edit/([0-9]+)', EditBlog),
+    ('/blog/([0-9]+)/([0-9]+)', EditComment),
     ('/blog/newpost', NewPost)
 ], debug=True)
