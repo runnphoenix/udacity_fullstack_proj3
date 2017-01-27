@@ -11,37 +11,47 @@
 		<title>Full Stack Nanodegree</title>
 	</head>
 	<body>
-		<h1 class="col-md-6">Full Stack Nanodegree</h1>
-		<table class="col-md-6">
-			<tr>
-			{% if not logged %}
-				<td>
-					<a href="/signup">
-					signup
-					</a>
-				</td>
-				<td>
-					<a href="/login">
-					Login
-					</a>
-				</td>
-			{% else %}
-				<td>
-					<a href="/logout">
-					logout
-					</a>
-				</td>
-			{% endif %}
-			</tr>
-		</table>
-
-		<hr>
-		
-		{% block userAccount %}
-		{% endblock %}
-		
-		{% block blog %}
-		{% endblock %}
-		
+		<div class="container">
+			<header class="row">
+				<div class="col-md-6">
+					<h1 style="float:left">Full Stack Nanodegree</h1>
+				</div>
+				<div class="col-md-6">
+					<table style="float:right">
+						<tr>
+						{% if not logged %}
+							<td>
+								<a href="/signup">
+								signup
+								</a>
+							</td>
+							<td>
+								<a href="/login">
+								Login
+								</a>
+							</td>
+						{% else %}
+							<td>
+								<a href="/logout">
+								logout
+								</a>
+							</td>
+						{% endif %}
+						</tr>
+					</table>
+				</div>
+			</header>
+			
+			<section class="row">
+				{% block userAccount %}
+				{% endblock %}
+			</section>
+			
+			<section class="row">
+				{% block blog %}
+				{% endblock %}
+			</section>
+			
+		</div>
 	</body>
 </html>
