@@ -24,9 +24,8 @@
 	<br><br>
 	{% if is_author %}
 		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
-		
-		<form name="deleteButton" method="post">
-			<button>Delete</button>
+		<form method="post">
+			<button name="deleteButton">Delete</button>
 		</form>
 	{% endif %}
 	

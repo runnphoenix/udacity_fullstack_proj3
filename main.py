@@ -283,7 +283,7 @@ class BlogPage(Handler):
         # Delete
         elif "deleteButton" in params:
             blog.delete()
-            self.redirect("/blog")
+            self.redirect("/blog/?")
         # Delete Comment
         elif "deleteComment" in params:
             comment_id = self.request.get("deleteComment")
@@ -297,6 +297,7 @@ class BlogPage(Handler):
             newcomment.put()
             self.get(blog_id)
         else:
+            print("else")
             self.get(blog_id)
         
 class EditBlog(Handler):
