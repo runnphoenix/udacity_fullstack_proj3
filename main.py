@@ -268,8 +268,11 @@ class BlogPage(Handler):
         
         commentContent = self.request.get("commentContent")
         params = self.request.params
+        # Edit
+        if "editButton" in params:
+            self.redirect('/blog/edit/' + str(blog.key().id()))
         # Like
-        if "likeButton" in params:
+        elif "likeButton" in params:
             toAdd = True
             like = Like(fromed = self.user.name, blog_id = key.id())
             likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
@@ -297,7 +300,6 @@ class BlogPage(Handler):
             newcomment.put()
             self.get(blog_id)
         else:
-            print("else")
             self.get(blog_id)
         
 class EditBlog(Handler):
@@ -347,7 +349,6 @@ class EditComment(Handler):
         blog = db.get(blog_key)
         comment_key = db.Key.from_path("Comment", int(comment_id))
         comment = db.get(comment_key)
-        print(comment.content)
         self.render("editComment.html", blog = blog, comment = comment)
         
     def post(self, blog_id, comment_id):

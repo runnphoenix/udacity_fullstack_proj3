@@ -3,34 +3,34 @@
 {% block content %}
 
 	<h3>{{blog.title}}</h3>
-	<div>{{blog.created.strftime("%b %d, %Y")}}</div>
 	<div>{{blog.author}}</div>
+	<div>{{blog.created.strftime("%H:%M %b %d, %Y")}}</div>
 	<hr>
-	<br>
 	</textarea style="width:300px; height:500px;">{{blog.content | safe}}</textarea>
 	
-	<br><br>
-	<!-- Likes -->
-	<h3>Likes</h3>
-	{% for like in likes %}
-		<div>{{like.fromed}}</div>
-	{% endfor %}
-	<br>
-	<form method="post">
-		<button name="likeButton">Like</button>
-	</form>
-	
-	
+	<!-- Edit & Delete -->
 	<br><br>
 	{% if is_author %}
-		<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
 		<form method="post">
+			<button name="editButton">Edit</button>
 			<button name="deleteButton">Delete</button>
 		</form>
 	{% endif %}
 	
+	<br>
+	<!-- Likes -->
+	<h4>Likes</h4>
+	{% for like in likes %}
+		<div>{{like.fromed}}</div>
+	{% endfor %}
+	<br>
+	{% if not is_author %}
+		<form method="post">
+			<button name="likeButton">Like</button>
+		</form>
+	{% endif %}
 	
-	<br><br>
+	<br>
 	<!-- Comments -->
 	<h3>Comments</h3>
 	{% for comment in comments %}
@@ -43,15 +43,14 @@
 				<button>Delete Comment</button>
 			{% endif %}
 		</form>
-		<br><br>
+		<br>
 	{% endfor %}
 	
-	
-	<br><br>
+	<br>
 	<!-- New Comment -->
 	<h3>New Comment</h3>
 	<form method="post">
-		<textarea name="commentContent" style="width:200px;height:100px;"></textarea>
+		<textarea name="commentContent" style="width:300px;height:150px;"></textarea>
 		<br>
 		<input type="submit">
 	</form>

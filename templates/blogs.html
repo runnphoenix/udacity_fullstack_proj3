@@ -2,12 +2,15 @@
 
 {% block content %}
 	{% for blog in blogs %}
-		<br><br>
 		<div class="blog">
 			<div class="row">
-				<a class="col-md-3" href="/blog/{{blog.key().id()}}">{{blog.title}}</a>
+				<h3>
+					<a class="col-md-3" href="/blog/{{blog.key().id()}}">{{blog.title}}</a>
+				</a3>
+			</div>
+			<div class="row">
 				<div class="col-md-1">{{blog.author}}</div>
-				<div class="blog-created col-md-2" style="display:block">{{blog.created.strftime("%b %d, %Y")}}</div>
+				<div class="blog-created col-md-2" style="display:block">{{blog.created.strftime("%H:%M %b %d, %Y")}}</div>
 			</div>
 			
 			<div class="row">
