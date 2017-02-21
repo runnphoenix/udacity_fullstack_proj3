@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block blog %}
-	<a href="/blog" class="main-title">
-	<h2>Blogs</h2>
-	</a>
+	<div class="row">
+		<a href="/blog" class="main-title col-md-3">
+		<h2>Blogs</h2>
+		</a>
 	
-	<a href="/blog/newpost" class="main-title">
-	<h3>New Blog</h3>
-	</a>
+		<a href="/blog/newpost" class="main-title col-md-3">
+		<h3>New Blog</h3>
+		</a>
+	</div>
 
 	<div>
 	{% block content %}

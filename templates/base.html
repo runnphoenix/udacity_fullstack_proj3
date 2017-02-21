@@ -8,46 +8,35 @@
 		<!-- Bootstrap CSS File -->
 		<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css">
 		
-		<title>Full Stack Nanodegree</title>
+		<title>Happy Coder Friends</title>
 	</head>
 	<body>
 		<div class="container">
 			<header class="row">
 				<div class="col-md-6">
-					<h1 style="float:left">Full Stack Nanodegree</h1>
+					<h1 style="float:left">Happy Coder Friends</h1>
 				</div>
-				<div class="col-md-6">
-					<table style="float:right">
-						<tr>
-						{% if not logged %}
-							<td>
-								<a href="/signup">
-								signup
-								</a>
-							</td>
-							<td>
-								<a href="/login">
-								Login
-								</a>
-							</td>
-						{% else %}
-							<td>
-								<a href="/logout">
-								logout
-								</a>
-							</td>
-						{% endif %}
-						</tr>
-					</table>
+				
+				<div class="col-md-1">
+					{% if not logged %}
+						<a href="/signup">signup</a>
+					{% endif %}
+				</div>
+				<div class="col-md-1">
+					{% if not logged %}
+						<a href="/login">login</a>
+					{% else %}
+						<a href="/logout">logout</a>
+					{% endif %}
 				</div>
 			</header>
 			
-			<section class="row">
+			<section>
 				{% block userAccount %}
 				{% endblock %}
 			</section>
 			
-			<section class="row">
+			<section>
 				{% block blog %}
 				{% endblock %}
 			</section>
