@@ -2,17 +2,17 @@
 
 {% block blog %}
 	<div class="row">
-		<a href="/blog" class="main-title col-md-3">
-		<h2>Blogs</h2>
+		<a href="/blog" class="col-md-12">
+			<h2>Blogs</h2>
 		</a>
+	</div>
 	
-		<a href="/blog/newpost" class="main-title col-md-3">
-		<h3>Write a New Blog</h3>
-		</a>
+	<div>
+		<a href="/blog/newpost" class="col-md-3" style="float:right;">Write a New Blog</a>
 	</div>
 
 	<div>
-	{% block content %}
-	{% endblock %}
+		{% block content %}
+		{% endblock %}
 	</div>
 {% endblock %}

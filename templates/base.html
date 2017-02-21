@@ -13,16 +13,16 @@
 	<body>
 		<div class="container">
 			<header class="row">
-				<div class="col-md-6">
+				<div class="col-md-12">
 					<h1 style="float:left">Happy Coder Friends</h1>
 				</div>
 				
-				<div class="col-md-1">
+				<div class="col-md-1" style="float:right;">
 					{% if not logged %}
 						<a href="/signup">signup</a>
 					{% endif %}
 				</div>
-				<div class="col-md-1">
+				<div class="col-md-1" style="float:right;">
 					{% if not logged %}
 						<a href="/login">login</a>
 					{% else %}

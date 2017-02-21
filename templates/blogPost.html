@@ -19,10 +19,8 @@
 	
 	<br>
 	<!-- Likes -->
-	<h4>Likes</h4>
-	{% for like in likes %}
-		<div>{{like.fromed}}</div>
-	{% endfor %}
+	<h4>Likes {{count}}</h4>
+	
 	<br>
 	{% if not is_author %}
 		<form method="post">
