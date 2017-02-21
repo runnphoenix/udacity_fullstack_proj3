@@ -8,6 +8,7 @@ import webapp2
 from google.appengine.ext import db
 from string import letters
 
+
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
@@ -277,7 +278,7 @@ class BlogPage(Handler):
         params = self.request.params
         # Edit
         if "editButton" in params:
-            self.redirect('/blog/edit/' + str(blog.key().id()))
+            self.redirect('/blog/edit/%s' % str(blog.key().id()))
         # Like
         elif "likeButton" in params:
             toAdd = True
@@ -288,8 +289,7 @@ class BlogPage(Handler):
                     toAdd = False
             if toAdd:
                 like.put()
-            #TODO: if OK, change other similar places
-            self.get(blog_id)
+            self.redirect('/blog/%s' % str(blog_id))
         # Delete
         elif "deleteButton" in params:
             blog.delete()
@@ -297,17 +297,17 @@ class BlogPage(Handler):
         # Delete Comment
         elif "deleteComment" in params:
             comment.delete()
-            self.get(blog_id)
+            self.redirect('/blog/%s' % str(blog_id))
         # Edit Comment
         elif "editComment" in params:
-            self.redirect('/blog/' + str(blog.key().id()) + '/' + str(comment.key().id()))
+            self.redirect('/blog/%s/%s' % (str(blog.key().id()), str(comment.key().id())))
         # Comment
         elif commentContent:
             newcomment = Comment(content = commentContent, author = self.user.name, blog_id = key.id())
             newcomment.put()
-            self.get(blog_id)
+            self.redirect('/blog/%s' % str(blog_id))
         else:
-            self.get(blog_id)
+            self.redirect('/blog/%s' % str(blog_id))
         
 class EditBlog(Handler):
     def get(self, blog_id):
@@ -334,9 +334,7 @@ class EditBlog(Handler):
             blog = db.get(key)
             blog.title = blogTitle
             blog.content = blogContent
-            
             blog.put()
-            
             # goto blog page
             self.redirect("/blog/%s" % str(blog.key().id()))
     
