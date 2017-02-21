@@ -38,9 +38,9 @@
 		<div>{{comment.content}}</div>
 		<form method="post">
 			{% if comment.author == userName %}
-				<a href="/blog/{{blog.key().id()}}/{{comment.key().id()}}">Edit Comment</a>
-				<input name="deleteComment" type="hidden" value="{{comment.key().id()}}">
-				<button>Delete Comment</button>
+				<input name="comment" type="hidden" value="{{comment.key().id()}}">
+				<button name="editComment">Edit Comment</button>
+				<button name="deleteComment">Delete Comment</button>
 			{% endif %}
 		</form>
 		<br>

@@ -265,6 +265,10 @@ class BlogPage(Handler):
     def post(self, blog_id):
         key = db.Key.from_path("Blog", int(blog_id), parent = blogs_key())
         blog = db.get(key)
+        comment_id = self.request.get("comment")
+        if comment_id:
+            comment_key = db.Key.from_path("Comment", int(comment_id))
+            comment = db.get(comment_key)
         
         commentContent = self.request.get("commentContent")
         params = self.request.params
@@ -289,11 +293,11 @@ class BlogPage(Handler):
             self.redirect("/blog/?")
         # Delete Comment
         elif "deleteComment" in params:
-            comment_id = self.request.get("deleteComment")
-            comment_key = db.Key.from_path("Comment", int(comment_id))
-            comment = db.get(comment_key)
             comment.delete()
             self.get(blog_id)
+        # Edit Comment
+        elif "editComment" in params:
+            self.redirect('/blog/' + str(blog.key().id()) + '/' + str(comment.key().id()))
         # Comment
         elif commentContent:
             newcomment = Comment(content = commentContent, author = self.user.name, blog_id = key.id())
