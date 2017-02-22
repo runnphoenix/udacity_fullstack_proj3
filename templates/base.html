@@ -12,22 +12,23 @@
 	</head>
 	<body>
 		<div class="container">
-			<header class="row">
-				<div class="col-md-12">
+			<header>
+				<div class="row">
 					<h1 style="float:left">Happy Coder Friends</h1>
 				</div>
-				
-				<div class="col-md-1" style="float:right;">
-					{% if not logged %}
-						<a href="/signup">signup</a>
-					{% endif %}
-				</div>
-				<div class="col-md-1" style="float:right;">
-					{% if not logged %}
-						<a href="/login">login</a>
-					{% else %}
-						<a href="/logout">logout</a>
-					{% endif %}
+				<div class="row">
+					<div class="col-md-1" style="float:right;">
+						{% if not logged %}
+							<a href="/signup">signup</a>
+						{% endif %}
+					</div>
+					<div class="col-md-1" style="float:right;">
+						{% if not logged %}
+							<a href="/login">login</a>
+						{% else %}
+							<a href="/logout">logout</a>
+						{% endif %}
+					</div>
 				</div>
 			</header>
 			
