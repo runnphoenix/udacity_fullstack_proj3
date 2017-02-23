@@ -13,13 +13,12 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(template_dir),
     autoescape=True)
-
+    
+secret = "burningPyre"
 
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
-
-secret = "burningPyre"
 
 
 def make_secure_val(val):
@@ -32,8 +31,6 @@ def check_secure_val(h):
         return val
 
 # Handler
-
-
 class Handler(webapp2.RequestHandler):
 
     def write(self, *a, **kw):
@@ -64,23 +61,17 @@ class Handler(webapp2.RequestHandler):
 
 
 # MainPage
-
-
 class MainPage(Handler):
 
     def get(self):
         self.render("base.html")
 
 # Users
-
-
 def users_key(group='default'):
     return db.Key.from_path("users", group)
 
-
 def make_salt(length=5):
     return ''.join(random.choice(letters) for x in xrange(length))
-
 
 def make_pw_hash(name, pw, salt=None):
     if not salt:
@@ -88,11 +79,9 @@ def make_pw_hash(name, pw, salt=None):
     h = hashlib.sha256(name + pw + salt).hexdigest()
     return "%s,%s" % (salt, h)
 
-
 def valid_hash(name, pw, h):
     salt = h.split(',')[0]
     return h == make_pw_hash(name, pw, salt)
-
 
 class User(db.Model):
     name = db.StringProperty(required=True)
@@ -114,8 +103,6 @@ class User(db.Model):
         user = User(name=username, pw_hash=pw_hash, email=email)
 
 # User Account
-
-
 class Signup(Handler):
 
     def get(self):
@@ -181,8 +168,6 @@ class Signup(Handler):
             # redirect
             self.redirect('/welcome')
 
-# TODO: check password
-
 
 class Login(Signup):
 
@@ -239,8 +224,6 @@ class Welcome(Handler):
             self.redirect('/login')
 
 # Blogs
-
-
 def blogs_key(name="default"):
     return db.Key.from_path("blogs", name)
 
