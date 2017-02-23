@@ -19,8 +19,8 @@
 	
 	<br>
 	<!-- Likes -->
-	<h4>Likes {{count}}</h4>
-	{% if not is_author %}
+	<h4>Likes {{likeCount}}</h4>
+	{% if not is_author and not liked %}
 		<form method="post">
 			<button name="likeButton">Like</button>
 		</form>

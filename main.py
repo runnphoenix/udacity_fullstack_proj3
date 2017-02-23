@@ -315,9 +315,13 @@ class BlogPage(Handler):
         comments = db.GqlQuery(
             "select * from Comment where blog_id = :1 order by created", key.id())
         likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
-        count = 0
+        likeCount = 0
+        liked = False
         for like in likes:
-            count = count + 1
+            likeCount = likeCount + 1
+            if like.fromed == self.user.name:
+                liked = True
+            
         self.render(
             "blogPost.html",
             blog=blog,
@@ -325,7 +329,8 @@ class BlogPage(Handler):
             userName=self.user.name,
             comments=comments,
             likes=likes,
-            count=count)
+            likeCount=likeCount,
+            liked=liked)
 
     def post(self, blog_id):
         key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
