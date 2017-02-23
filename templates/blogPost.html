@@ -30,13 +30,16 @@
 	<!-- Comments -->
 	<h3>Comments</h3>
 	{% for comment in comments %}
-		<div>{{comment.author}}</div>
+		<div class="row">
+			<div class="col-md-1">{{comment.author}}</div>
+			<div class="col-md-3">{{comment.created.strftime("%H:%M %m-%d-%Y")}}</div>
+		</div>
 		<div>{{comment.content}}</div>
 		<form method="post">
 			{% if comment.author == userName %}
 				<input name="comment" type="hidden" value="{{comment.key().id()}}">
-				<button name="editComment">Edit Comment</button>
-				<button name="deleteComment">Delete Comment</button>
+				<button name="editComment">Edit</button>
+				<button name="deleteComment">Delete</button>
 			{% endif %}
 		</form>
 		<br>
