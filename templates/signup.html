@@ -1,37 +1,17 @@
 {% extends "base.html" %}
 
 {% block userAccount %}
-<h2>Signup</h2>
-		
-<form method="post">
-	<table>
-	<tr>
-		<td>Username</div>
-		<td><input type="text" name="username" value="{{username}}"></td>
-		<td style="color:red;">{{error_username}}</td>
-	</tr>
-
-	<tr>
-		<td>Password</td>
-		<td><input type="password" name="password" value=""></td>
-		<td>{{error_password}}</td>
-	</tr>
-	
-	<tr>
-		<td>Verify Password</td>
-		<td><input type="password" name="verify" value=""></td>
-		<td>{{error_verify}}</td>
-	</tr>
-	
-	<tr>
-		<td>Email(optional)</td>
-		<td><input type="text" name="email" value="{{email}}"></td>
-		<td>{{error_email}}</td>
-	</tr>
-	</table>
-
-	<br>
-	<input type="submit">
-
-</form>
+	<h2>Signup</h2>
+	<form method="post">
+		Username:<br>
+		<input type="text" name="username" value="{{username}}">{{error_username}}<br>
+		Password:<br>
+		<input type="password" name="password" value="">{{error_password}}<br>
+		Verify Password:<br>
+		<input type="password" name="verify" value="">{{error_verify}}<br>
+		Email(optional):<br>
+		<input type="text" name="email" value="{{email}}">{{error_email}}<br>
+		<br>
+		<input type="submit">
+	</form>
 {% endblock %}
