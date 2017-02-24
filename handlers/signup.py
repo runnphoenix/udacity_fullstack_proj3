@@ -1,5 +1,27 @@
 #!/usr/bin/python
 
+import re
+import random
+import hashlib
+from string import letters
+from google.appengine.ext import db
+
+from handler import Handler
+from models import User
+
+
+def users_key(group='default'):
+	return db.Key.from_path("users", group)
+
+def make_salt(length=5):
+	return ''.join(random.choice(letters) for x in xrange(length))
+
+def make_pw_hash(name, pw, salt=None):
+	if not salt:
+		salt = make_salt()
+	h = hashlib.sha256(name + pw + salt).hexdigest()
+	return "%s,%s" % (salt, h)
+
 class Signup(Handler):
 
 	def get(self):

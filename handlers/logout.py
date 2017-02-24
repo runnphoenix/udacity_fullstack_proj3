@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from handler import Handler
+
 class Logout(Handler):
 
     def get(self):

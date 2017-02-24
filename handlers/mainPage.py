@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-# MainPage
+from handler import Handler
+
 class MainPage(Handler):
 
     def get(self):

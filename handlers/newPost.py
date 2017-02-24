@@ -1,5 +1,12 @@
 #!/usr/bin/python
 
+from handler import Handler
+from models import BlogPost
+from google.appengine.ext import db
+
+def blogs_key(name="default"):
+	return db.Key.from_path("blogs", name)
+
 class NewPost(Handler):
 
 	def get(self):
@@ -22,7 +29,7 @@ class NewPost(Handler):
 				blogContent=blogContent)
 		else:
 			# write db
-			blog = Blog(
+			blog = BlogPost(
 				parent=blogs_key(),
 				title=blogTitle,
 				content=blogContent,

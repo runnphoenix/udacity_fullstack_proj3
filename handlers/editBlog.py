@@ -1,9 +1,12 @@
 #!/usr/bin/python
 
+from handler import Handler
+from google.appengine.ext import db
+
 class EditBlog(Handler):
 
 	def get(self, blog_id):
-		key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+		key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
 		blog = db.get(key)
 
 		if not blog:
@@ -26,7 +29,7 @@ class EditBlog(Handler):
 				blogContent=blogContent)
 		else:
 			# write db
-			key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+			key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
 			blog = db.get(key)
 			blog.title = blogTitle
 			blog.content = blogContent

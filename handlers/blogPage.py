@@ -1,9 +1,18 @@
 #!/usr/bin/python
 
+from handler import Handler
+from models import Comment
+from google.appengine.ext import db
+
+from models import Like
+
+def blogs_key(name="default"):
+	return db.Key.from_path("blogs", name)
+
 class BlogPage(Handler):
 
 	def get(self, blog_id):
-		key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+		key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
 		blog = db.get(key)
 
 		if not blog:
@@ -37,7 +46,7 @@ class BlogPage(Handler):
 			liked=liked)
 
 	def post(self, blog_id):
-		key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+		key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
 		blog = db.get(key)
 		comment_id = self.request.get("comment")
 		if comment_id:
@@ -86,3 +95,4 @@ class BlogPage(Handler):
 			self.redirect('/blog/%s' % str(blog_id))
 		else:
 			self.redirect('/blog/%s' % str(blog_id))
+			

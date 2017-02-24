@@ -13,10 +13,6 @@ def make_pw_hash(name, pw, salt=None):
 	h = hashlib.sha256(name + pw + salt).hexdigest()
 	return "%s,%s" % (salt, h)
 
-def valid_hash(name, pw, h):
-	salt = h.split(',')[0]
-	return h == make_pw_hash(name, pw, salt)
-
 class User(db.Model):
 	name = db.StringProperty(required=True)
 	pw_hash = db.StringProperty(required=True)
