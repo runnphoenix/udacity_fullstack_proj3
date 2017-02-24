@@ -8,6 +8,11 @@ import webapp2
 from google.appengine.ext import db
 from string import letters
 
+from models import User
+from models import Like
+from models import Comment
+from models import BlogPost
+
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
@@ -66,41 +71,6 @@ class MainPage(Handler):
     def get(self):
         self.render("base.html")
 
-# Users
-def users_key(group='default'):
-    return db.Key.from_path("users", group)
-
-def make_salt(length=5):
-    return ''.join(random.choice(letters) for x in xrange(length))
-
-def make_pw_hash(name, pw, salt=None):
-    if not salt:
-        salt = make_salt()
-    h = hashlib.sha256(name + pw + salt).hexdigest()
-    return "%s,%s" % (salt, h)
-
-def valid_hash(name, pw, h):
-    salt = h.split(',')[0]
-    return h == make_pw_hash(name, pw, salt)
-
-class User(db.Model):
-    name = db.StringProperty(required=True)
-    pw_hash = db.StringProperty(required=True)
-    email = db.StringProperty()
-
-    @classmethod
-    def by_name(cls, name):
-        u = User.all().filter('name =', name).get()
-        return u
-
-    @classmethod
-    def by_id(cls, user_id):
-        return User.get_by_id(user_id, parent=users_key())
-
-    @classmethod
-    def signup(cls, username, pw, email=None):
-        pw_hash = make_pw_hash(username, pw)
-        user = User(name=username, pw_hash=pw_hash, email=email)
 
 # User Account
 class Signup(Handler):
@@ -234,7 +204,7 @@ class Blogs(Handler):
     def get(self):
         # Show blogs
         blogs = db.GqlQuery(
-            "select * from Blog order by created desc limit 10")
+            "select * from BlogPost order by created desc limit 10")
         self.render("blogs.html", blogs=blogs)
 
 
@@ -260,7 +230,7 @@ class NewPost(Handler):
                 blogContent=blogContent)
         else:
             # write db
-            blog = Blog(
+            blog = BlogPost(
                 parent=blogs_key(),
                 title=blogTitle,
                 content=blogContent,
@@ -283,7 +253,7 @@ class NewPost(Handler):
 class BlogPage(Handler):
 
     def get(self, blog_id):
-        key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+        key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
         blog = db.get(key)
 
         if not blog:
@@ -317,7 +287,7 @@ class BlogPage(Handler):
             liked=liked)
 
     def post(self, blog_id):
-        key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+        key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
         blog = db.get(key)
         comment_id = self.request.get("comment")
         if comment_id:
@@ -371,7 +341,7 @@ class BlogPage(Handler):
 class EditBlog(Handler):
 
     def get(self, blog_id):
-        key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+        key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
         blog = db.get(key)
 
         if not blog:
@@ -394,7 +364,7 @@ class EditBlog(Handler):
                 blogContent=blogContent)
         else:
             # write db
-            key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+            key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
             blog = db.get(key)
             blog.title = blogTitle
             blog.content = blogContent
@@ -416,7 +386,7 @@ class EditBlog(Handler):
 class EditComment(Handler):
 
     def get(self, blog_id, comment_id):
-        blog_key = db.Key.from_path("Blog", int(blog_id), parent=blogs_key())
+        blog_key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
         blog = db.get(blog_key)
         comment_key = db.Key.from_path("Comment", int(comment_id))
         comment = db.get(comment_key)
@@ -430,29 +400,6 @@ class EditComment(Handler):
         comment.put()
         self.redirect("/blog/%s" % blog_id)
 
-
-class Blog(db.Model):
-    title = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    author = db.StringProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    modified = db.DateTimeProperty(auto_now=True)
-
-    def prepare_render(self):
-        self.content = self.content.replace('\n', '<br>')
-
-
-class Comment(db.Model):
-    content = db.TextProperty(required=True)
-    author = db.StringProperty(required=True)
-    blog_id = db.IntegerProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    modified = db.DateTimeProperty(auto_now=True)
-
-
-class Like(db.Model):
-    blog_id = db.IntegerProperty(required=True)
-    fromed = db.StringProperty(required=True)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
