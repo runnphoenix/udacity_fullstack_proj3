@@ -1,11 +1,13 @@
 import webapp2
 from google.appengine.ext import db
 
+# imports Models
 from models import User
 from models import Like
 from models import Comment
 from models import BlogPost
 
+#imports Handlers
 from handlers import Signup
 from handlers import Login
 from handlers import BlogPage

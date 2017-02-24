@@ -1,0 +1,16 @@
+
+blogs_key:
+	blogPage
+	editComment
+	newPost
+	
+users_key:
+	user
+	signup
+	
+make_salt:
+make_pw_hash:
+	login
+	signup
+	user
+

@@ -9,7 +9,6 @@ from google.appengine.ext import db
 from handler import Handler
 from models import User
 
-
 def users_key(group='default'):
 	return db.Key.from_path("users", group)
 
