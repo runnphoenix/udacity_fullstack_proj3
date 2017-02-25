@@ -3,41 +3,49 @@
 from handler import Handler
 from models import BlogPost
 from google.appengine.ext import db
+import functools
 
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
 
 class NewPost(Handler):
-
-	def get(self):
-		if self.user:
-			self.render("newpost.html")
-		else:
-			self.redirect("/login")
-
-	def post(self):
-		if self.user:
-			blogTitle = self.request.get("subject")
-			blogContent = self.request.get("content")
-
-			# Judge title and content
-			errorMessage = self.erMessage(blogTitle, blogContent)
-			if errorMessage:
-				self.render(
-					"newpost.html",
-					errorMessage=errorMessage,
-					blogTitle=blogTitle,
-					blogContent=blogContent)
+	def user_logged_in(function):
+		@functools.wraps(function)
+		def wrapper(self):
+			if self.user:
+				return function(self)
 			else:
-				# write db
-				blog = BlogPost(
-					parent=blogs_key(),
-					title=blogTitle,
-					content=blogContent,
-					author=self.user.name)
-				blog.put()
-				# goto blog page
-				self.redirect("/blog/%s" % str(blog.key().id()))
+				self.redirect("/login")
+				return
+		return wrapper
+
+	@user_logged_in
+	def get(self):
+		self.render("newpost.html")
+	
+	@user_logged_in
+	def post(self):
+		blogTitle = self.request.get("subject")
+		blogContent = self.request.get("content")
+
+		# Judge title and content
+		errorMessage = self.erMessage(blogTitle, blogContent)
+		if errorMessage:
+			self.render(
+				"newpost.html",
+				errorMessage=errorMessage,
+				blogTitle=blogTitle,
+				blogContent=blogContent)
+		else:
+			# write db
+			blog = BlogPost(
+				parent=blogs_key(),
+				title=blogTitle,
+				content=blogContent,
+				author=self.user.name)
+			blog.put()
+			# goto blog page
+			self.redirect("/blog/%s" % str(blog.key().id()))
 
 	def erMessage(self, blogTitle, blogContent):
 		if blogTitle and (not blogContent):

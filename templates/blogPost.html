@@ -20,7 +20,7 @@
 	<br>
 	<!-- Likes -->
 	<h4>Likes {{likes_count}}</h4>
-	{% if not is_author and not liked %}
+	{% if (not is_author) and (not liked) and (not userName=='') %}
 		<form method="post">
 			<a href="/blog/like/{{blog.key().id()}}">Like</a>
 		</form>

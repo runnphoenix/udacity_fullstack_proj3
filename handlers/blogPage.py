@@ -5,25 +5,40 @@ from models import Comment
 from models import Like
 
 from google.appengine.ext import db
+import functools
 
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
 
 class BlogPage(Handler):
-
-	def get(self, blog_id):
-		blog_key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
-		blog = db.get(blog_key)
-
-		if not blog:
-			self.error(404)
-			return
-
+	def user_logged_in(function):
+		@functools.wraps(function)
+		def wrapper(self, *a):
+			if self.user:
+				return function(self, *a)
+			else:
+				self.redirect('/login')
+				return
+		return wrapper
+			
+	def post_exist(function):
+		@functools.wraps(function)
+		def wrapper(self, blog_id):
+			key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
+			blog = db.get(key)
+			if blog:
+				return function(self, blog_id, blog)
+			else:
+				self.error(404)
+				return
+		return wrapper
+	
+	@user_logged_in		
+	@post_exist
+	def get(self, blog_id, blog):
 		blog.prepare_render()
 
-		is_author = False
-		if self.user:
-			is_author = (self.user.name == blog.author)
+		is_author = (self.user.name == blog.author)
 		
 		liked = False
 		likes_count = 0
@@ -31,7 +46,7 @@ class BlogPage(Handler):
 			likes_count = likes_count + 1
 			if like.fromed == self.user.name:
 				liked = True
-		
+			
 		self.render(
 			"blogPost.html",
 			blog=blog,
@@ -39,26 +54,17 @@ class BlogPage(Handler):
 			userName=self.user.name,
 			likes_count=likes_count,
 			liked=liked)
-
-	def post(self, blog_id):
-		key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
-		blog = db.get(key)
-		comment_id = self.request.get("comment")
-		if comment_id:
-			comment_key = db.Key.from_path("Comment", int(comment_id))
-			comment = db.get(comment_key)
-
-		commentContent = self.request.get("commentContent")
-		params = self.request.params
-			
+	
+	@user_logged_in
+	@post_exist
+	def post(self, blog_id, blog):
 		# Comment
+		commentContent = self.request.get('commentContent')
 		if commentContent:
 			newcomment = Comment(
 				content=commentContent,
 				author=self.user.name,
-				blog_id=key.id())
+				blog_id=int(blog_id))
 			newcomment.put()
-			self.redirect('/blog/%s' % str(blog_id))
-		else:
-			self.redirect('/blog/%s' % str(blog_id))
+		self.redirect('/blog/%s' % str(blog_id))
 			

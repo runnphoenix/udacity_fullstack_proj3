@@ -28,7 +28,6 @@ def check_secure_val(h):
 		
 # Handler
 class Handler(webapp2.RequestHandler):
-
 	def write(self, *a, **kw):
 		self.response.out.write(*a, **kw)
 
@@ -54,3 +53,4 @@ class Handler(webapp2.RequestHandler):
 		webapp2.RequestHandler.initialize(self, *a, **kw)
 		uid = self.read_cookie()
 		self.user = uid and User.by_id(int(uid))
+			
