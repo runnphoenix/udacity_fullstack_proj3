@@ -10,3 +10,6 @@ from logout import Logout
 from mainPage import MainPage
 from newPost import NewPost
 from welcome import Welcome
+from deleteBlog import DeleteBlog
+from likeBlog import LikeBlog
+from deleteComment import DeleteComment

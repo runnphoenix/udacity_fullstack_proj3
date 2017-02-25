@@ -2,9 +2,9 @@
 
 from handler import Handler
 from models import Comment
-from google.appengine.ext import db
-
 from models import Like
+
+from google.appengine.ext import db
 
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
@@ -12,8 +12,8 @@ def blogs_key(name="default"):
 class BlogPage(Handler):
 
 	def get(self, blog_id):
-		key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
-		blog = db.get(key)
+		blog_key = db.Key.from_path("BlogPost", int(blog_id), parent=blogs_key())
+		blog = db.get(blog_key)
 
 		if not blog:
 			self.error(404)
@@ -24,25 +24,20 @@ class BlogPage(Handler):
 		is_author = False
 		if self.user:
 			is_author = (self.user.name == blog.author)
-
-		comments = db.GqlQuery(
-			"select * from Comment where blog_id = :1 order by created", key.id())
-		likes = db.GqlQuery("select * from Like where blog_id = :1", key.id())
-		likeCount = 0
+		
 		liked = False
-		for like in likes:
-			likeCount = likeCount + 1
+		likes_count = 0
+		for like in blog.likes:
+			likes_count = likes_count + 1
 			if like.fromed == self.user.name:
 				liked = True
-			
+		
 		self.render(
 			"blogPost.html",
 			blog=blog,
 			is_author=is_author,
 			userName=self.user.name,
-			comments=comments,
-			likes=likes,
-			likeCount=likeCount,
+			likes_count=likes_count,
 			liked=liked)
 
 	def post(self, blog_id):
@@ -55,38 +50,9 @@ class BlogPage(Handler):
 
 		commentContent = self.request.get("commentContent")
 		params = self.request.params
-		# Edit
-		if "editButton" in params:
-			self.redirect('/blog/edit/%s' % str(blog.key().id()))
-		# Like
-		elif "likeButton" in params:
-			toAdd = True
-			like = Like(fromed=self.user.name, blog_id=key.id())
-			likes = db.GqlQuery(
-				"select * from Like where blog_id = :1", key.id())
-			for liked in likes:
-				if liked.fromed == like.fromed:
-					toAdd = False
-			if toAdd:
-				like.put()
-			self.redirect('/blog/%s' % str(blog_id))
-		# Delete
-		elif "deleteButton" in params:
-			blog.delete()
-			self.redirect("/blog/?")
-		# Delete Comment
-		elif "deleteComment" in params:
-			comment.delete()
-			self.redirect('/blog/%s' % str(blog_id))
-		# Edit Comment
-		elif "editComment" in params:
-			self.redirect(
-				'/blog/%s/%s' %
-				(str(
-					blog.key().id()), str(
-					comment.key().id())))
+			
 		# Comment
-		elif commentContent:
+		if commentContent:
 			newcomment = Comment(
 				content=commentContent,
 				author=self.user.name,

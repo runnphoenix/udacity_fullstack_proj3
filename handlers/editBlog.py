@@ -3,6 +3,9 @@
 from handler import Handler
 from google.appengine.ext import db
 
+def blogs_key(name="default"):
+	return db.Key.from_path("blogs", name)
+	
 class EditBlog(Handler):
 
 	def get(self, blog_id):

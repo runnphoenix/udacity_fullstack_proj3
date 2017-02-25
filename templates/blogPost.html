@@ -12,24 +12,24 @@
 	<br><br>
 	{% if is_author %}
 		<form method="post">
-			<button name="editButton">Edit</button>
-			<button name="deleteButton">Delete</button>
+			<a href="/blog/edit/{{blog.key().id()}}">Edit</a>
+			<a href="/blog/delete/{{blog.key().id()}}">Delete</a>
 		</form>
 	{% endif %}
 	
 	<br>
 	<!-- Likes -->
-	<h4>Likes {{likeCount}}</h4>
+	<h4>Likes {{likes_count}}</h4>
 	{% if not is_author and not liked %}
 		<form method="post">
-			<button name="likeButton">Like</button>
+			<a href="/blog/like/{{blog.key().id()}}">Like</a>
 		</form>
 	{% endif %}
 	
 	<br>
 	<!-- Comments -->
 	<h3>Comments</h3>
-	{% for comment in comments %}
+	{% for comment in blog.comments %}
 		<div class="row">
 			<div class="col-md-1">{{comment.author}}</div>
 			<div class="col-md-3">{{comment.created.strftime("%H:%M %m-%d-%Y")}}</div>
@@ -38,8 +38,8 @@
 		<form method="post">
 			{% if comment.author == userName %}
 				<input name="comment" type="hidden" value="{{comment.key().id()}}">
-				<button name="editComment">Edit</button>
-				<button name="deleteComment">Delete</button>
+				<a href="/blog/{{blog.key().id()}}/edit/{{comment.key().id()}}">Edit</a>
+				<a href="/blog/{{blog.key().id()}}/delete/{{comment.key().id()}}">Delete</a>
 			{% endif %}
 		</form>
 		<br>

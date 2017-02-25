@@ -16,27 +16,28 @@ class NewPost(Handler):
 			self.redirect("/login")
 
 	def post(self):
-		blogTitle = self.request.get("subject")
-		blogContent = self.request.get("content")
+		if self.user:
+			blogTitle = self.request.get("subject")
+			blogContent = self.request.get("content")
 
-		# Judge title and content
-		errorMessage = self.erMessage(blogTitle, blogContent)
-		if errorMessage:
-			self.render(
-				"newpost.html",
-				errorMessage=errorMessage,
-				blogTitle=blogTitle,
-				blogContent=blogContent)
-		else:
-			# write db
-			blog = BlogPost(
-				parent=blogs_key(),
-				title=blogTitle,
-				content=blogContent,
-				author=self.user.name)
-			blog.put()
-			# goto blog page
-			self.redirect("/blog/%s" % str(blog.key().id()))
+			# Judge title and content
+			errorMessage = self.erMessage(blogTitle, blogContent)
+			if errorMessage:
+				self.render(
+					"newpost.html",
+					errorMessage=errorMessage,
+					blogTitle=blogTitle,
+					blogContent=blogContent)
+			else:
+				# write db
+				blog = BlogPost(
+					parent=blogs_key(),
+					title=blogTitle,
+					content=blogContent,
+					author=self.user.name)
+				blog.put()
+				# goto blog page
+				self.redirect("/blog/%s" % str(blog.key().id()))
 
 	def erMessage(self, blogTitle, blogContent):
 		if blogTitle and (not blogContent):
