@@ -39,10 +39,10 @@ class NewPost(Handler):
 		else:
 			# write db
 			blog = BlogPost(
+				user=self.user,
 				parent=blogs_key(),
 				title=blogTitle,
-				content=blogContent,
-				author=self.user.name)
+				content=blogContent)
 			blog.put()
 			# goto blog page
 			self.redirect("/blog/%s" % str(blog.key().id()))

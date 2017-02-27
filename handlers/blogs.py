@@ -8,5 +8,5 @@ class Blogs(Handler):
 	def get(self):
 		# Show blogs
 		blogs = db.GqlQuery(
-			"select * from BlogPost order by created desc limit 10")
+			"select * from BlogPost order by created desc")
 		self.render("blogs.html", blogs=blogs)

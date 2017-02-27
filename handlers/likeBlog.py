@@ -33,9 +33,9 @@ class LikeBlog(Handler):
 		
 	@user_logged_in
 	@post_exist
-	def get(self, blog_id):
+	def get(self, blog_id, blog):
 		toAdd = True
-		like = Like(fromed=self.user.name, blog_id=blog_key.id())
+		like = Like(blog_post=blog, fromed=self.user.name)
 		for liked in blog.likes:
 			if liked.fromed == like.fromed:
 				toAdd = False

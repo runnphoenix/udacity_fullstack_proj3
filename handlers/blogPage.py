@@ -38,7 +38,7 @@ class BlogPage(Handler):
 	def get(self, blog_id, blog):
 		blog.prepare_render()
 
-		is_author = (self.user.name == blog.author)
+		is_author = (self.user.name == blog.user.name)
 		
 		liked = False
 		likes_count = 0
@@ -62,9 +62,9 @@ class BlogPage(Handler):
 		commentContent = self.request.get('commentContent')
 		if commentContent:
 			newcomment = Comment(
+				blog_post = blog,
 				content=commentContent,
-				author=self.user.name,
-				blog_id=int(blog_id))
+				author=self.user.name)
 			newcomment.put()
 		self.redirect('/blog/%s' % str(blog_id))
 			
