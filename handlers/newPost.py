@@ -5,25 +5,18 @@ from models import BlogPost
 from google.appengine.ext import db
 import functools
 
+import trry
+
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
 
 class NewPost(Handler):
-	def user_logged_in(function):
-		@functools.wraps(function)
-		def wrapper(self):
-			if self.user:
-				return function(self)
-			else:
-				self.redirect("/login")
-				return
-		return wrapper
 
-	@user_logged_in
+	@trry.user_logged_in
 	def get(self):
 		self.render("newpost.html")
 	
-	@user_logged_in
+	@trry.user_logged_in
 	def post(self):
 		blogTitle = self.request.get("subject")
 		blogContent = self.request.get("content")

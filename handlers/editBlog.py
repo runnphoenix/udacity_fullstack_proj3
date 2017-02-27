@@ -8,26 +8,15 @@ import trry
 	
 class EditBlog(Handler):
 		
-	def user_owns_blog(function):
-		@functools.wraps(function)
-		def wrapper(self, blog_id, blog):
-			if self.user.name == blog.user.name:
-				return function(self, blog_id, blog)
-			else:
-				self.redirect('/blog/%s' % str(blog_id))
-				return
-		return wrapper
-	
-	
 	@trry.user_logged_in
 	@trry.post_exist
-	@user_owns_blog
+	@trry.user_owns_blog
 	def get(self, blog_id, blog):
 		self.render("editBlog.html", blog=blog)
 	
 	@trry.user_logged_in
 	@trry.post_exist
-	@user_owns_blog
+	@trry.user_owns_blog
 	def post(self, blog_id, blog):
 		blogTitle = self.request.get("subject")
 		blogContent = self.request.get("content")

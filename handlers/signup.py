@@ -65,7 +65,7 @@ class Signup(Handler):
 			errorMessage = "User already exist."
 			self.render("signup.html", error_username=errorMessage)
 		else:
-			pw_hash = make_pw_hash(self.userName, self.password)
+			pw_hash = self.make_pw_hash(self.userName, self.password)
 			user = User(
 				parent=users_key(),
 				name=self.userName,
@@ -83,6 +83,6 @@ class Signup(Handler):
 
 	def make_pw_hash(self, name, pw, salt=None):
 		if not salt:
-			salt = make_salt()
+			salt = self.make_salt()
 		h = hashlib.sha256(name + pw + salt).hexdigest()
 		return "%s,%s" % (salt, h)
