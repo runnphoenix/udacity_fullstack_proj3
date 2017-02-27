@@ -25,16 +25,26 @@ class DeleteComment(Handler):
 			comment_key = db.Key.from_path("Comment", int(comment_id))
 			comment = db.get(comment_key)
 			if comment:
-				return function(self, blog_id, comment_id)
+				return function(self, blog_id, comment)
 			else:
 				self.error(404)
 				return
 		return wrapper
 	
 	# TODO: add user_owns_comment
+	def user_owns_comment(function):
+		@functools.wraps(function)
+		def wrapper(self, blog_id, comment):
+			if self.user.name == comment.author:
+				return function(self, blog_id, comment)
+			else:
+				self.redirect('/blog/%s' % str(blog_id))
+				return
+		return wrapper
 	
 	@user_logged_in
 	@comment_exist
-	def get(self, blog_id, comment_id):
+	@user_owns_comment
+	def get(self, blog_id, comment):
 		comment.delete()
 		self.redirect('/blog/%s' % str(blog_id))
