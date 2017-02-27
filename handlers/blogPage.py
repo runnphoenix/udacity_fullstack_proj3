@@ -2,7 +2,6 @@
 
 from handler import Handler
 from models import Comment
-from models import Like
 
 from google.appengine.ext import db
 import functools

@@ -5,9 +5,6 @@ from models import Comment
 from google.appengine.ext import db
 import functools
 
-def blogs_key(name="default"):
-	return db.Key.from_path("blogs", name)
-
 class DeleteComment(Handler):
 	def user_logged_in(function):
 		@functools.wraps(function)

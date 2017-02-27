@@ -1,22 +1,7 @@
 #!/usr/bin/python
 
-import hashlib
-
 from signup import Signup
 from models import User
-	
-def make_salt(length=5):
-	return ''.join(random.choice(letters) for x in xrange(length))
-
-def make_pw_hash(name, pw, salt=None):
-	if not salt:
-		salt = make_salt()
-	h = hashlib.sha256(name + pw + salt).hexdigest()
-	return "%s,%s" % (salt, h)
-	
-def valid_hash(name, pw, h):
-	salt = h.split(',')[0]
-	return h == make_pw_hash(name, pw, salt)
 
 class Login(Signup):
 
@@ -44,7 +29,7 @@ class Login(Signup):
 		else:
 			user = User.by_name(username)
 			if user:
-				if valid_hash(username, password, user.pw_hash):
+				if self.valid_hash(username, password, user.pw_hash):
 					self.add_cookie(user)
 					self.redirect('/welcome')
 				else:
@@ -56,3 +41,7 @@ class Login(Signup):
 				self.render(
 					"login.html",
 					error_user_exist="No such user, please signup first.")
+					
+	def valid_hash(self, name, pw, h):
+		salt = h.split(',')[0]
+		return h == self.make_pw_hash(name, pw, salt)

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 from google.appengine.ext import db
 
 def users_key(group='default'):
