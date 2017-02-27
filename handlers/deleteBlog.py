@@ -33,7 +33,7 @@ class DeleteBlog(Handler):
 	def user_owns_blog(function):
 		@functools.wraps(function)
 		def wrapper(self, blog_id, blog):
-			if self.user.name == blog.author:
+			if self.user.name == blog.user.name:
 				return function(self, blog_id, blog)
 			else:
 				self.redirect('/blog/%s' % str(blog_id))

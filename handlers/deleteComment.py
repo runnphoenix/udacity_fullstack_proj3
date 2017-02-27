@@ -31,7 +31,6 @@ class DeleteComment(Handler):
 				return
 		return wrapper
 	
-	# TODO: add user_owns_comment
 	def user_owns_comment(function):
 		@functools.wraps(function)
 		def wrapper(self, blog_id, comment):
