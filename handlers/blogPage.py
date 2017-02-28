@@ -10,8 +10,8 @@ import accessControl
 
 class BlogPage(Handler):
 	
+	@accessControl.user_logged_in		
 	@accessControl.post_exist
-	@accessControl.user_logged_in
 	def get(self, blog_id, blog):
 		blog.prepare_render()
 
@@ -32,8 +32,8 @@ class BlogPage(Handler):
 			likes_count=likes_count,
 			liked=liked)
 	
-	@accessControl.post_exist
 	@accessControl.user_logged_in
+	@accessControl.post_exist
 	def post(self, blog_id, blog):
 		# Comment
 		commentContent = self.request.get('commentContent')

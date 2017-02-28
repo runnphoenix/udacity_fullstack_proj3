@@ -8,15 +8,15 @@ import accessControl
 	
 class EditBlog(Handler):
 		
-	@accessControl.user_owns_blog
-	@accessControl.post_exist
 	@accessControl.user_logged_in
+	@accessControl.post_exist
+	@accessControl.user_owns_blog
 	def get(self, blog_id, blog):
 		self.render("editBlog.html", blog=blog)
-		
-	@accessControl.user_owns_blog
-	@accessControl.post_exist
+	
 	@accessControl.user_logged_in
+	@accessControl.post_exist
+	@accessControl.user_owns_blog
 	def post(self, blog_id, blog):
 		blogTitle = self.request.get("subject")
 		blogContent = self.request.get("content")

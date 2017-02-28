@@ -12,8 +12,8 @@ def blogs_key(name="default"):
 
 class LikeBlog(Handler):
 		
-	@accessControl.post_exist
 	@accessControl.user_logged_in
+	@accessControl.post_exist
 	def get(self, blog_id, blog):
 		toAdd = True
 		like = Like(blog_post=blog, fromed=self.user.name)
