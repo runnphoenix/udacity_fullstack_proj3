@@ -3,8 +3,6 @@
 from handler import Handler
 from models import BlogPost
 from google.appengine.ext import db
-import functools
-
 import accessControl
 
 def blogs_key(name="default"):

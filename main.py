@@ -1,5 +1,4 @@
 import webapp2
-from google.appengine.ext import db
 
 # imports Models
 from models import User

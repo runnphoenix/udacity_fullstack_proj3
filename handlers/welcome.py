@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
 from handler import Handler
-import functools
-
 import accessControl
 
 class Welcome(Handler):

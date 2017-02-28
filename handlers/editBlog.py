@@ -1,9 +1,6 @@
 #!/usr/bin/python
 
 from handler import Handler
-from google.appengine.ext import db
-import functools
-
 import accessControl
 	
 class EditBlog(Handler):
