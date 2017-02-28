@@ -5,19 +5,19 @@ from models import Comment
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 
 class EditComment(Handler):
 	
-	@trry.user_logged_in
-	@trry.comment_exist
-	@trry.user_owns_comment
+	@accessControl.user_owns_comment
+	@accessControl.comment_exist
+	@accessControl.user_logged_in
 	def get(self, blog_id, comment):
 		self.render("editComment.html", blog_id=blog_id, comment=comment)
-	
-	@trry.user_logged_in
-	@trry.comment_exist
-	@trry.user_owns_comment
+		
+	@accessControl.user_owns_comment
+	@accessControl.comment_exist
+	@accessControl.user_logged_in
 	def post(self, blog_id, comment):
 		newCommentContent = self.request.get("content")
 		comment.content = newCommentContent

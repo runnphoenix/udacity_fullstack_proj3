@@ -5,18 +5,18 @@ from models import BlogPost
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
 
 class NewPost(Handler):
 
-	@trry.user_logged_in
+	@accessControl.user_logged_in
 	def get(self):
 		self.render("newpost.html")
 	
-	@trry.user_logged_in
+	@accessControl.user_logged_in
 	def post(self):
 		blogTitle = self.request.get("subject")
 		blogContent = self.request.get("content")

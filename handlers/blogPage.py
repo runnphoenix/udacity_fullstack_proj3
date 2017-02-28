@@ -6,12 +6,12 @@ from models import Comment
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 
 class BlogPage(Handler):
 	
-	@trry.user_logged_in		
-	@trry.post_exist
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def get(self, blog_id, blog):
 		blog.prepare_render()
 
@@ -32,8 +32,8 @@ class BlogPage(Handler):
 			likes_count=likes_count,
 			liked=liked)
 	
-	@trry.user_logged_in
-	@trry.post_exist
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def post(self, blog_id, blog):
 		# Comment
 		commentContent = self.request.get('commentContent')

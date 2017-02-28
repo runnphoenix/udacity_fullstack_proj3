@@ -3,10 +3,10 @@
 from handler import Handler
 import functools
 
-import trry
+import accessControl
 
 class Welcome(Handler):
 	
-	@trry.user_logged_in	
+	@accessControl.user_logged_in	
 	def get(self):
 		self.render("welcome.html", username=self.user.name)

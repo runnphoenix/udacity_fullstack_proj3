@@ -4,19 +4,19 @@ from handler import Handler
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 	
 class EditBlog(Handler):
 		
-	@trry.user_logged_in
-	@trry.post_exist
-	@trry.user_owns_blog
+	@accessControl.user_owns_blog
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def get(self, blog_id, blog):
 		self.render("editBlog.html", blog=blog)
-	
-	@trry.user_logged_in
-	@trry.post_exist
-	@trry.user_owns_blog
+		
+	@accessControl.user_owns_blog
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def post(self, blog_id, blog):
 		blogTitle = self.request.get("subject")
 		blogContent = self.request.get("content")

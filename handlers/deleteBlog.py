@@ -4,13 +4,13 @@ from handler import Handler
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 
 class DeleteBlog(Handler):
 	
-	@trry.user_logged_in
-	@trry.post_exist
-	@trry.user_owns_blog
+	@accessControl.user_owns_blog
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def get(self, blog_id, blog):
 		blog.delete()
 		self.redirect('/blog/?')

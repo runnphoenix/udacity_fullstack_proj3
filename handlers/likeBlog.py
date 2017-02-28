@@ -5,15 +5,15 @@ from models import Like
 from google.appengine.ext import db
 import functools
 
-import trry
+import accessControl
 
 def blogs_key(name="default"):
 	return db.Key.from_path("blogs", name)
 
 class LikeBlog(Handler):
 		
-	@trry.user_logged_in
-	@trry.post_exist
+	@accessControl.post_exist
+	@accessControl.user_logged_in
 	def get(self, blog_id, blog):
 		toAdd = True
 		like = Like(blog_post=blog, fromed=self.user.name)
