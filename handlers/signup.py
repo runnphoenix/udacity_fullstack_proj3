@@ -1,16 +1,12 @@
 #!/usr/bin/python
 
 import re
-import random
-import hashlib
-from string import letters
 from google.appengine.ext import db
 from handler import Handler
 from models import User
 
 def users_key(group='default'):
 	return db.Key.from_path("users", group)
-	
 
 class Signup(Handler):
 
@@ -65,7 +61,7 @@ class Signup(Handler):
 			errorMessage = "User already exist."
 			self.render("signup.html", error_username=errorMessage)
 		else:
-			pw_hash = self.make_pw_hash(self.userName, self.password)
+			pw_hash = User.make_pw_hash(self.userName, self.password)
 			user = User(
 				parent=users_key(),
 				name=self.userName,
@@ -77,12 +73,3 @@ class Signup(Handler):
 			# redirect
 			self.redirect('/welcome')
 	
-	# Make password hash		
-	def make_salt(self, length=5):
-		return ''.join(random.choice(letters) for x in xrange(length))
-
-	def make_pw_hash(self, name, pw, salt=None):
-		if not salt:
-			salt = self.make_salt()
-		h = hashlib.sha256(name + pw + salt).hexdigest()
-		return "%s,%s" % (salt, h)

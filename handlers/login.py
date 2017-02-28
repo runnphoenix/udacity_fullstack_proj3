@@ -29,7 +29,7 @@ class Login(Signup):
 		else:
 			user = User.by_name(username)
 			if user:
-				if self.valid_hash(username, password, user.pw_hash):
+				if User.valid_hash(username, password, user.pw_hash):
 					self.add_cookie(user)
 					self.redirect('/welcome')
 				else:
@@ -42,6 +42,3 @@ class Login(Signup):
 					"login.html",
 					error_user_exist="No such user, please signup first.")
 					
-	def valid_hash(self, name, pw, h):
-		salt = h.split(',')[0]
-		return h == self.make_pw_hash(name, pw, salt)
