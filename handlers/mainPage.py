@@ -2,7 +2,8 @@
 
 from handler import Handler
 
+
 class MainPage(Handler):
 
     def get(self):
-		self.render("base.html")
+        self.render("base.html")

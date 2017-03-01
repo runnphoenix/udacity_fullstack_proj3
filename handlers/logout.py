@@ -2,8 +2,9 @@
 
 from handler import Handler
 
+
 class Logout(Handler):
 
     def get(self):
-		self.reset_cookie()
-		self.redirect('/login')
+        self.reset_cookie()
+        self.redirect('/login')
